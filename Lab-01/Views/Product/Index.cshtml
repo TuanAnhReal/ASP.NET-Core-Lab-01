@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Lab_01.Models.ProductModel>
+
+@{ ViewData["Title"] = "Danh sách sản phẩm";
+                // Khởi tạo culture tiếng Việt để format tiền tệ (VNĐ)
+                var vnCulture = new System.Globalization.CultureInfo("vi-VN"); }
+
+<h2 class="text-primary mt-3">Quản Lý Sản Phẩm</h2>
+<hr />
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Thêm sản phẩm mới</a>
+</p>
+
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Mã SP</th>
+            <th>Tên Sản Phẩm</th>
+            <th>Giá (VNĐ)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+<tr>
+    <td>@item.ID</td>
+    <td>@item.Name</td>
+    <td>@item.Price.ToString("C0", vnCulture)</td>
+</tr> }
+            }
+            else
+            {
+<tr>
+    <td colspan="3" class="text-center">Chưa có sản phẩm nào.</td>
+</tr>}
+    </tbody>
+</table>
