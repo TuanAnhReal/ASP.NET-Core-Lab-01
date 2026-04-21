@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lab_01
 {
@@ -24,6 +25,8 @@ namespace Lab_01
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddDbContext<AppDBContext>(options =>
+                                                    options.UseSqlServer("name=MSSQL"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

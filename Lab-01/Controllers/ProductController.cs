@@ -9,14 +9,16 @@ namespace Lab_01.Controllers
 {
     public class ProductController : Controller
     {
-        public static List<ProductModel> dsSanPham = new List<ProductModel> {
-           new ProductModel{ ID = 1, Name = "Nho", Price = 20000 },
-           new ProductModel{ ID = 2, Name = "Táo", Price = 50000 },
-           new ProductModel{ ID = 3, Name = "Chuối", Price = 90000 }
-        };
+        private AppDBContext _context;
+
+        public ProductController (AppDBContext context)
+        {
+            _context = context;
+        }
         public IActionResult Index()
         {
-            return View(dsSanPham);
+            var product = _context.Products.ToList();
+            return View(product);
         }
 
 
@@ -33,22 +35,22 @@ namespace Lab_01.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(dsSanPham.Any(p => p.ID == product.ID))
-                {
-                    ModelState.AddModelError("Id", "Mã sản phẩm này đã tồn tại!");
-                    return View(product);
-                }
-                if (product.Name == null)
-                {
-                    ModelState.AddModelError("Name", "Tên sản phẩm không được để trống!");
-                    return View(product);
-                }
 
-                dsSanPham.Add(product);
-
-                return RedirectToAction("Index");
+                _context.Products.Add(product);
+                _context.SaveChanges();
+                
             }
-            return View(product);
+            return RedirectToAction("Index");
+        }
+
+
+        public IActionResult Delete(int id)
+        {
+            var product = _context.Products.Find(id); 
+                _context.Products.Remove(product);
+                _context.SaveChanges();
+
+            return RedirectToAction("Index");
         }
     }
 }

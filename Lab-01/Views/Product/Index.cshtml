@@ -28,6 +28,11 @@
     <td>@item.ID</td>
     <td>@item.Name</td>
     <td>@item.Price.ToString("C0", vnCulture)</td>
+    <td>
+        <a asp-action="update" asp-route-id="@item.ID"> Sửa </a>
+        <a asp-action="delete" asp-route-id="@item.ID"> Xoá </a>
+
+    </td>
 </tr> }
             }
             else

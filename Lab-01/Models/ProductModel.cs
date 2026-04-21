@@ -14,7 +14,7 @@ namespace Lab_01.Models
 
         [Display(Name = "Tên sản phẩm")]
         [Required(ErrorMessage = "Vui lòng nhập tên sản phẩm.")]
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         [Display(Name = "Giá sản phẩm")]
         [Required(ErrorMessage = "Vui lòng nhập giá sản phẩm.")]
