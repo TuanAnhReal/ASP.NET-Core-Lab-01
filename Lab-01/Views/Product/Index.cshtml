@@ -11,34 +11,29 @@
     <a asp-action="Create" class="btn btn-success">Thêm sản phẩm mới</a>
 </p>
 
-<table class="table table-bordered table-hover">
-    <thead class="table-dark">
+<table class="table table-bordered table-striped">
+    <thead>
         <tr>
-            <th>Mã SP</th>
-            <th>Tên Sản Phẩm</th>
-            <th>Giá (VNĐ)</th>
+            <th>Tên sản phẩm</th>
+            <th>Giá sản phẩm</th>
+            <th>Danh mục</th>
+            <th>Hành động</th>
         </tr>
     </thead>
     <tbody>
-        @if (Model != null && Model.Any())
+        @foreach (var item in Model)
         {
-            foreach (var item in Model)
-            {
-<tr>
-    <td>@item.ID</td>
-    <td>@item.Name</td>
-    <td>@item.Price.ToString("C0", vnCulture)</td>
-    <td>
-        <a asp-action="update" asp-route-id="@item.ID"> Sửa </a>
-        <a asp-action="delete" asp-route-id="@item.ID"> Xoá </a>
-
-    </td>
-</tr> }
-            }
-            else
-            {
-<tr>
-    <td colspan="3" class="text-center">Chưa có sản phẩm nào.</td>
-</tr>}
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Price.ToString("N0") VNĐ</td>
+                <td>@item.Category.Name</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-warning btn-sm">Sửa</a>
+                    <form asp-action="Delete" asp-route-id="@item.ID" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa?');">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

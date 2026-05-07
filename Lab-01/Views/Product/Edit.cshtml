@@ -1,10 +1,10 @@
 ﻿@model Lab_01.Models.ProductModel
 
 @{
-    ViewData["Title"] = "Thêm mới sản phẩm";
+    ViewData["Title"] = "Sửa sản phẩm";
 }
 
-<h2 class="text-primary mt-3">Thêm Mới Sản Phẩm</h2>
+<h2 class="text-primary mt-3">Sửa Sản Phẩm</h2>
 <hr />
 
 <div class="row">
@@ -33,5 +33,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
