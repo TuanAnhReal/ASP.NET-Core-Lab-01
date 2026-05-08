@@ -17,10 +17,56 @@ namespace Lab_01.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+
+        //tìm kiếm và phân trang
+        public IActionResult Index(string searchString, int page = 1)
         {
-            var product = _context.Products.Include(p => p.Category).ToList();
-            return View(product);
+            int pageSize = 5;
+
+            // Lấy query ban đầu có Include Category
+            var query = _context.Products.Include(p => p.Category).AsQueryable();
+
+            // Nếu người dùng có nhập từ khóa tìm kiếm
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query.Where(p => p.Name.Contains(searchString));
+            }
+
+            // Đếm tổng số sản phẩm thỏa mãn điều kiện để tính số trang
+            int totalItems = query.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            // Lấy dữ liệu của trang hiện tại bằng Skip và Take
+            var products = query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            // Truyền dữ liệu phân trang và tìm kiếm qua View
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.SearchString = searchString;
+
+            return View(products);
+        }
+
+        // thống kê sp theo danh mục
+        public IActionResult Statistics()
+        {
+            var stats = _context.Products
+                .Include(p => p.Category)
+                .GroupBy(p => p.Category.Name)
+                .Select(g => new CategoryStatisticViewModel
+                {
+                    CategoryName = g.Key,
+                    ProductCount = g.Count(),
+                    MaxPrice = g.Max(p => p.Price),
+                    MinPrice = g.Min(p => p.Price),
+                    AveragePrice = g.Average(p => p.Price),
+                    TotalValue = g.Sum(p => p.Price)
+                }).ToList();
+
+            return View(stats);
         }
 
 

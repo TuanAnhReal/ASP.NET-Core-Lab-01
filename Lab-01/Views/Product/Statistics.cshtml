@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Lab_01.Models.CategoryStatisticViewModel>
+
+@{
+    ViewData["Title"] = "Thống kê sản phẩm";
+}
+
+<h2 class="mb-4">Thống kê sản phẩm theo danh mục</h2>
+
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Tên danh mục</th>
+            <th>Số lượng SP</th>
+            <th>Giá cao nhất</th>
+            <th>Giá thấp nhất</th>
+            <th>Giá trung bình</th>
+            <th>Tổng giá trị</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><strong>@item.CategoryName</strong></td>
+                <td>@item.ProductCount</td>
+                <td class="text-danger">@item.MaxPrice.ToString("N0") VNĐ</td>
+                <td class="text-success">@item.MinPrice.ToString("N0") VNĐ</td>
+                <td class="text-primary">@item.AveragePrice.ToString("N0") VNĐ</td>
+                <td class="text-warning font-weight-bold">@item.TotalValue.ToString("N0") VNĐ</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary mt-3">Quay lại danh sách</a>

@@ -1,15 +1,14 @@
 ﻿@model IEnumerable<Lab_01.Models.ProductModel>
 
-@{ ViewData["Title"] = "Danh sách sản phẩm";
-                // Khởi tạo culture tiếng Việt để format tiền tệ (VNĐ)
-                var vnCulture = new System.Globalization.CultureInfo("vi-VN"); }
+<h2 class="mb-4">Danh sách sản phẩm</h2>
 
-<h2 class="text-primary mt-3">Quản Lý Sản Phẩm</h2>
-<hr />
-
-<p>
-    <a asp-action="Create" class="btn btn-success">Thêm sản phẩm mới</a>
-</p>
+<form asp-action="Index" method="get" class="mb-3">
+    <div class="input-group w-50">
+        <input type="text" name="searchString" value="@ViewBag.SearchString" class="form-control" placeholder="Nhập tên sản phẩm cần tìm..." />
+        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </div>
+</form>
 
 <table class="table table-bordered table-striped">
     <thead>
@@ -21,19 +20,50 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Price.ToString("N0") VNĐ</td>
+                    <td>@item.Category?.Name</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-warning btn-sm">Sửa</a>
+                        <form asp-action="Delete" asp-route-id="@item.ID" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa?');">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        else
         {
             <tr>
-                <td>@item.Name</td>
-                <td>@item.Price.ToString("N0") VNĐ</td>
-                <td>@item.Category.Name</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-warning btn-sm">Sửa</a>
-                    <form asp-action="Delete" asp-route-id="@item.ID" method="post" style="display:inline;">
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa?');">Xóa</button>
-                    </form>
-                </td>
+                <td colspan="4" class="text-center">Không tìm thấy sản phẩm nào.</td>
             </tr>
         }
     </tbody>
 </table>
+
+@if (ViewBag.TotalPages > 1)
+{
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)" asp-route-searchString="@ViewBag.SearchString">Previous</a>
+            </li>
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-searchString="@ViewBag.SearchString">@i</a>
+                </li>
+            }
+
+            <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)" asp-route-searchString="@ViewBag.SearchString">Next</a>
+            </li>
+        </ul>
+    </nav>
+}
